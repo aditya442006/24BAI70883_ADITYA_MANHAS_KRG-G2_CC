@@ -1,40 +1,20 @@
 #include <iostream>
-#include <stack>
-#include <string>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 class Solution {
 public:
-    bool isValid(string s) {
-        stack<char> st;
-        
-        for (char c : s) {
-            if (c == '(' || c == '{' || c == '[') {
-                st.push(c);
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> sub;
+        for (int num : nums) {
+            auto it = lower_bound(sub.begin(), sub.end(), num);
+            if (it == sub.end()) {
+                sub.push_back(num);
             } else {
-                if (st.empty()) return false;
-                
-                char top = st.top();
-                st.pop();
-                
-                if ((c == ')' && top != '(') ||
-                    (c == '}' && top != '{') ||
-                    (c == ']' && top != '[')) {
-                    return false;
-                }
+                *it = num;
             }
         }
-        
-        return st.empty();
+        return sub.size();
     }
 };
-
-int main() {
-    Solution sol;
-    
-    cout << sol.isValid("()") << endl;
-    cout << sol.isValid("()[]{}") << endl;
-    cout << sol.isValid("(]") << endl;
-    
-    return 0;
-}
